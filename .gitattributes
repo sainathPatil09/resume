@@ -1,0 +1,34 @@
+# Ensure all text files have LF line endings
+* text=auto
+
+# Force LF for JavaScript files
+*.js text eol=lf
+
+# Force LF for JSX files (if you're using React)
+*.jsx text eol=lf
+
+# Force LF for JSON files
+*.json text eol=lf
+
+# Force LF for CSS and SCSS files
+*.css text eol=lf
+*.scss text eol=lf
+
+# Force LF for HTML files
+*.html text eol=lf
+
+# Treat markdown files with LF line endings
+*.md text eol=lf
+
+# For shell scripts (if any)
+*.sh text eol=lf
+
+# Ignore binary files
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.gif binary
+
+# Node.js lock files
+package-lock.json text eol=lf
+yarn.lock text eol=lf
