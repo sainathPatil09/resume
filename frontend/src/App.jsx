@@ -18,6 +18,7 @@ import ResumeBuilder from "./pages/ResumeBuilder/ResumeBuilder";
 import TemplateSelection from "./pages/ResumeBuilder/TemplateSelection";
 import PreviewResume from "./pages/ResumeBuilder/PreviewResume";
 import ResumeLanding from "./pages/ResumeLanding";
+import ResumeAnalysis from "./components/resume/ResumeAnalysis";
 
 function App() {
   return (
@@ -52,6 +53,7 @@ function App() {
             <Route path="/resume/builder/*" element={<ResumeBuilder />} />
             <Route path="/resume/templates" element={<TemplateSelection />} />
             <Route path="/resume/preview" element={<PreviewResume />} />
+            <Route path="/resume/analysis" element={<ResumeAnalysis />} />
           </Route>
         </Routes>
       </Router>
