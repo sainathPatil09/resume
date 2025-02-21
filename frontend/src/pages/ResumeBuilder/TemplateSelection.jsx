@@ -1,18 +1,33 @@
-// src/pages/ResumeBuilder/TemplateSelection.jsx
 import React, { useState } from "react";
 import TemplateCard from "../../components/resume/TemplateCard";
 import UploadTemplate from "../../components/resume/UploadTemplate";
 
-// Sample template data - you would expand this
+// Sample template data with explicit type property
 const defaultTemplates = [
   {
     id: 1,
     name: "Professional",
+    type: "professional",
     thumbnail: "/templates/professional-thumb.jpg",
   },
-  { id: 2, name: "Creative", thumbnail: "/templates/creative-thumb.jpg" },
-  { id: 3, name: "Modern", thumbnail: "/templates/modern-thumb.jpg" },
-  { id: 4, name: "Simple", thumbnail: "/templates/simple-thumb.jpg" },
+  {
+    id: 2,
+    name: "Creative",
+    type: "creative",
+    thumbnail: "/templates/creative-thumb.jpg",
+  },
+  {
+    id: 3,
+    name: "Modern",
+    type: "modern",
+    thumbnail: "/templates/modern-thumb.jpg",
+  },
+  {
+    id: 4,
+    name: "Simple",
+    type: "simple",
+    thumbnail: "/templates/simple-thumb.jpg",
+  },
 ];
 
 const TemplateSelection = ({ onSelectTemplate, onUploadTemplate }) => {

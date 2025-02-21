@@ -122,8 +122,6 @@ export default function PreviewResume({ template, resumeData, onBack }) {
     // Set template based on props or localStorage
     if (template?.type) {
       setSelectedTemplate(template.type);
-      const storedTemplate = localStorage.getItem("selectedTemplate");
-      console.log("Stored template:", storedTemplate);
     } else {
       const storedTemplate = localStorage.getItem("selectedTemplate");
       if (storedTemplate) {
