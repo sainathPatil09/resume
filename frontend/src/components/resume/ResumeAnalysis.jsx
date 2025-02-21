@@ -187,7 +187,7 @@ export default function ResumeAnalysis() {
         try {
           // Try to connect to the backend first
           const response = await fetch(
-            "http://localhost:5000/api/analyze-resume",
+            "http://localhost:3000/api/analyze-resume",
             {
               method: "POST",
               headers: {

@@ -5,6 +5,11 @@ const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
 
 export const analyzeResume = async (resumeText, targetRole) => {
   try {
+    if (!process.env.GEMINI_API_KEY) {
+      console.error("GEMINI_API_KEY is missing");
+      throw new Error("API key configuration error");
+    }
+
     const model = genAI.getGenerativeModel({ model: "gemini-pro" });
 
     const prompt = `
@@ -58,6 +63,7 @@ export const analyzeResume = async (resumeText, targetRole) => {
     return jsonData;
   } catch (error) {
     console.error("Error in analyzeResume:", error);
+    console.error("Error details:", error);
     throw error;
   }
 };

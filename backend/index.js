@@ -202,12 +202,21 @@ app.post("/api/analyze-resume", async (req, res) => {
         .status(400)
         .json({ error: "Resume text and target role are required" });
     }
+    console.log("Analyzing resume for role:", targetRole);
+    console.log("Resume text length:", resumeText.length);
 
     const analysis = await analyzeResume(resumeText, targetRole);
     res.json(analysis);
   } catch (error) {
-    console.error("Resume analysis error:", error);
-    res.status(500).json({ error: "Failed to analyze resume" });
+    console.error("Resume analysis error:", error.message);
+    res
+      .status(500)
+      .json({
+        error: "Failed to analyze resume",
+        message: error.message,
+        details:
+          process.env.Node_ENV == "development" ? error.stack : undefined,
+      });
   }
 });
 
