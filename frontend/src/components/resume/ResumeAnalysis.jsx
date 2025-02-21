@@ -9,9 +9,9 @@ export default function ResumeAnalysis() {
   const [analysis, setAnalysis] = useState(null);
   const [resumeData, setResumeData] = useState(null);
 
-  // Mock analysis function to generate realistic resume feedback
+  // Improved mock analysis function with strict keyword matching
   const generateMockAnalysis = (resumeText, targetRole) => {
-    // Extract content for basic analysis
+    // Convert to lowercase for case-insensitive matching
     const resumeLower = resumeText.toLowerCase();
     const targetRoleLower = targetRole.toLowerCase();
 
@@ -68,25 +68,99 @@ export default function ResumeAnalysis() {
       ],
     };
 
+    // Additional role-specific keywords
+    const additionalKeywords = {
+      developer: [
+        "typescript",
+        "redux",
+        "webpack",
+        "docker",
+        "graphql",
+        "ci/cd",
+        "testing",
+        "aws",
+        "cloud",
+        "microservices",
+      ],
+      designer: [
+        "adobe",
+        "illustrator",
+        "photoshop",
+        "design thinking",
+        "accessibility",
+        "color theory",
+        "typography",
+        "responsive design",
+      ],
+      manager: [
+        "kpi",
+        "roi",
+        "performance review",
+        "resource allocation",
+        "cross-functional",
+        "scrum",
+        "kanban",
+        "mentoring",
+      ],
+      marketing: [
+        "conversion rate",
+        "a/b testing",
+        "customer journey",
+        "google analytics",
+        "buyer persona",
+        "funnel",
+        "brand positioning",
+        "ctr",
+      ],
+      data: [
+        "r",
+        "pandas",
+        "numpy",
+        "data cleaning",
+        "etl",
+        "regression",
+        "classification",
+        "data modeling",
+        "big data",
+        "hadoop",
+      ],
+    };
+
     // Determine role category
     let roleKeywords = [];
+    let roleCategory = "";
+
     if (
       targetRoleLower.includes("develop") ||
       targetRoleLower.includes("engineer") ||
       targetRoleLower.includes("program")
     ) {
-      roleKeywords = commonKeywords.developer;
+      roleKeywords = [
+        ...commonKeywords.developer,
+        ...additionalKeywords.developer,
+      ];
+      roleCategory = "developer";
     } else if (targetRoleLower.includes("design")) {
-      roleKeywords = commonKeywords.designer;
+      roleKeywords = [
+        ...commonKeywords.designer,
+        ...additionalKeywords.designer,
+      ];
+      roleCategory = "designer";
     } else if (targetRoleLower.includes("manage")) {
-      roleKeywords = commonKeywords.manager;
+      roleKeywords = [...commonKeywords.manager, ...additionalKeywords.manager];
+      roleCategory = "manager";
     } else if (targetRoleLower.includes("market")) {
-      roleKeywords = commonKeywords.marketing;
+      roleKeywords = [
+        ...commonKeywords.marketing,
+        ...additionalKeywords.marketing,
+      ];
+      roleCategory = "marketing";
     } else if (
       targetRoleLower.includes("data") ||
       targetRoleLower.includes("analy")
     ) {
-      roleKeywords = commonKeywords.data;
+      roleKeywords = [...commonKeywords.data, ...additionalKeywords.data];
+      roleCategory = "data";
     } else {
       // Default to general professional keywords
       roleKeywords = [
@@ -96,74 +170,150 @@ export default function ResumeAnalysis() {
         "detail-oriented",
         "project",
         "results",
+        "innovation",
+        "critical thinking",
+        "time management",
+        "leadership",
       ];
+      roleCategory = "general";
     }
 
-    // Check which keywords are present
-    const keywordsPresent = roleKeywords.filter((keyword) =>
-      resumeLower.includes(keyword)
-    );
+    // Strict keyword matching - only count as present if the exact keyword is found
+    const keywordsPresent = roleKeywords.filter((keyword) => {
+      const keywordRegex = new RegExp(`\\b${keyword}\\b`, "i");
+      return keywordRegex.test(resumeLower);
+    });
+
     const keywordsMissing = roleKeywords.filter(
-      (keyword) => !resumeLower.includes(keyword)
+      (keyword) => !keywordsPresent.includes(keyword)
     );
 
-    // Calculate mock ATS score based on keyword presence and resume length
+    // Enhanced ATS score calculation
     const keywordScore = Math.floor(
-      (keywordsPresent.length / roleKeywords.length) * 70
+      (keywordsPresent.length / (roleKeywords.length * 0.6)) * 40
     );
-    const lengthScore =
-      resumeText.length > 1500 ? 25 : (resumeText.length / 1500) * 25;
-    const atsScore = Math.min(98, Math.floor(keywordScore + lengthScore));
 
-    // Generate improvement suggestions
+    // Check for sections and structure
+    const hasEducation = /education|degree|university|college|school/i.test(
+      resumeLower
+    );
+    const hasExperience = /experience|work|job|position|role/i.test(
+      resumeLower
+    );
+    const hasSkills = /skills|proficient|expertise|competent/i.test(
+      resumeLower
+    );
+    const structureScore =
+      [hasEducation, hasExperience, hasSkills].filter(Boolean).length * 7;
+
+    // Check for quantified achievements
+    const hasQuantifiedResults =
+      /increased|decreased|improved|reduced|generated|achieved|grew|by \d+%|\d+ percent|saved \$|\$\d+|ROI|KPI/i.test(
+        resumeLower
+      );
+    const achievementsScore = hasQuantifiedResults ? 15 : 0;
+
+    // Length and detail score
+    const lengthScore = Math.min(15, (resumeText.length / 2000) * 15);
+
+    // Combined score with upper limit
+    const rawScore =
+      keywordScore + structureScore + achievementsScore + lengthScore;
+    const atsScore = Math.min(98, Math.max(30, Math.floor(rawScore)));
+
+    // Generate role-specific improvement suggestions
     const improvementSuggestions = [];
+
+    // Always suggest the most critical missing keywords
     if (keywordsMissing.length > 0) {
+      const criticalKeywords = keywordsMissing.slice(0, 5);
       improvementSuggestions.push(
-        `Include key skills relevant to ${targetRole}: ${keywordsMissing
-          .slice(0, 3)
-          .join(", ")}`
+        `Include these critical ${roleCategory} keywords: ${criticalKeywords.join(
+          ", "
+        )}`
       );
     }
+
+    // Structure-based suggestions
+    if (!hasEducation) {
+      improvementSuggestions.push(
+        "Add a clear Education section with degree details and relevant coursework"
+      );
+    }
+    if (!hasExperience) {
+      improvementSuggestions.push(
+        "Create a detailed Work Experience section with dates, companies, and role responsibilities"
+      );
+    }
+    if (!hasSkills) {
+      improvementSuggestions.push(
+        "Include a dedicated Skills section organized by category (technical, soft, domain-specific)"
+      );
+    }
+
+    // Achievement-based suggestions
+    if (!hasQuantifiedResults) {
+      improvementSuggestions.push(
+        "Quantify your achievements with metrics (%, $, time saved, etc.) to demonstrate impact"
+      );
+    }
+
+    // Length-based suggestion
     if (resumeText.length < 1500) {
       improvementSuggestions.push(
         "Expand your resume with more detailed descriptions of your achievements and responsibilities"
       );
     }
-    if (
-      !resumeLower.includes("experience") ||
-      !resumeLower.includes("education")
-    ) {
-      improvementSuggestions.push(
-        "Ensure your resume includes clearly labeled sections for Education and Experience"
-      );
-    }
-    if (
-      !resumeLower.includes("result") &&
-      !resumeLower.includes("impact") &&
-      !resumeLower.includes("achiev")
-    ) {
-      improvementSuggestions.push(
-        "Quantify your achievements with metrics and results where possible"
-      );
-    }
+
+    // Generate role-specific achievement examples
+    const achievementExamples = {
+      developer: [
+        `Reduced page load time by 45% through optimization of React component rendering and implementing code splitting`,
+        `Developed RESTful API that processed 500K+ daily requests with 99.9% uptime, resulting in 30% improved data retrieval efficiency`,
+        `Led migration of legacy codebase to modern framework, reducing technical debt by 60% and improving team velocity by 35%`,
+      ],
+      designer: [
+        `Redesigned user onboarding flow increasing conversion rates by 27% and reducing drop-off by 18%`,
+        `Created design system that reduced design inconsistencies by 80% and accelerated UI development time by 40%`,
+        `Conducted user research with 50+ participants, identifying 8 critical pain points that informed product roadmap`,
+      ],
+      manager: [
+        `Led cross-functional team of 12 that delivered $1.2M project on time and 15% under budget`,
+        `Implemented new project management methodology that increased team productivity by 32% and reduced missed deadlines by 68%`,
+        `Mentored 5 junior team members, with 3 receiving promotions within 18 months`,
+      ],
+      marketing: [
+        `Launched email campaign that generated $125K in revenue with 22% conversion rate (industry average: 15%)`,
+        `Optimized SEO strategy resulting in 47% increase in organic traffic and 28% decrease in bounce rate`,
+        `Managed $350K quarterly digital advertising budget, achieving 3.2x ROI through strategic A/B testing`,
+      ],
+      data: [
+        `Built machine learning model that improved prediction accuracy by a5% over previous solution, resulting in $720K annual savings`,
+        `Automated ETL process reducing manual data processing time by 85% and eliminating data entry errors`,
+        `Designed interactive dashboard visualizing key business metrics, adopted by C-suite for strategic decision-making`,
+      ],
+      general: [
+        `Increased department efficiency by 25% through implementation of streamlined workflow processes`,
+        `Led cross-functional team that delivered project 10% under budget and 2 weeks ahead of schedule`,
+        `Identified and resolved key bottleneck, resulting in 30% increase in production output`,
+      ],
+    };
 
     return {
       atsScore,
       atsScoreComment:
         atsScore > 80
-          ? "Great job! Your resume is well-optimized for ATS systems."
-          : "Your resume needs some improvements to better match ATS requirements for this role.",
+          ? "Great job! Your resume is well-optimized for ATS systems with strong keyword relevance and structure."
+          : atsScore > 60
+          ? "Your resume needs some improvements to better match ATS requirements for this role. Focus on adding relevant keywords and quantifying achievements."
+          : "Your resume requires significant improvement for ATS optimization. Follow the suggestions below to increase your chances of getting past automated screening.",
       keywordsPresent,
-      keywordsMissing,
+      keywordsMissing: keywordsMissing.slice(0, 12), // Limit to most important missing keywords
       improvementSuggestions,
       achievementSuggestions: {
-        intro:
-          "Consider reformatting your achievements using the STAR or PAR method (Situation/Task, Action, Result)",
-        examples: [
-          `Increased website conversion rate by 35% through implementation of responsive design principles and A/B testing`,
-          `Reduced project delivery time by 20% by implementing an improved workflow system for the development team`,
-          `Managed a team of 5 designers that delivered 30+ client projects with 95% satisfaction rate`,
-        ],
+        intro: `For a ${targetRole} position, reformat your achievements using the STAR (Situation, Task, Action, Result) or PAR (Problem, Action, Result) method to clearly demonstrate your impact.`,
+        examples:
+          achievementExamples[roleCategory] || achievementExamples.general,
       },
     };
   };
@@ -247,7 +397,7 @@ export default function ResumeAnalysis() {
 
       try {
         const response = await fetch(
-          "http://localhost:5000/api/analyze-resume",
+          "http://localhost:3000/api/analyze-resume",
           {
             method: "POST",
             headers: {
@@ -346,7 +496,13 @@ export default function ResumeAnalysis() {
         <div className="flex items-center">
           <div className="w-full bg-gray-200 rounded-full h-4 mr-4">
             <div
-              className="bg-blue-600 h-4 rounded-full"
+              className={`h-4 rounded-full ${
+                analysis?.atsScore >= 80
+                  ? "bg-green-600"
+                  : analysis?.atsScore >= 60
+                  ? "bg-yellow-500"
+                  : "bg-red-500"
+              }`}
               style={{ width: `${analysis?.atsScore || 0}%` }}
             ></div>
           </div>
