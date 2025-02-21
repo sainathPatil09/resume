@@ -1,48 +1,52 @@
-// src/components/resume/DownloadButton.jsx
-import { useRef } from "react";
-import html2canvas from "html2canvas";
-import jsPDF from "jspdf";
 import { Button } from "../ui/button";
+import { PDFDocument, rgb } from "pdf-lib";
+import { toPng } from "html-to-image";
 
 export default function DownloadButton({ resumeRef }) {
   const downloadPDF = async () => {
     if (!resumeRef.current) return;
 
     try {
-      // Add loading state if needed
-      const resumeElement = resumeRef.current;
-      const canvas = await html2canvas(resumeElement, {
-        scale: 2,
-        useCORS: true,
-        logging: false,
-      });
+      // Convert the resume element to a PNG image
+      const imgData = await toPng(resumeRef.current, { quality: 1.0 });
 
-      const imgData = canvas.toDataURL("image/png");
+      // Create a new PDF document
+      const pdfDoc = await PDFDocument.create();
+      const page = pdfDoc.addPage([595.28, 841.89]); // A4 size in points
 
-      // A4 paper dimensions in pts (72 dpi)
-      const pdf = new jsPDF({
-        orientation: "portrait",
-        unit: "pt",
-        format: "a4",
-      });
+      // Embed the PNG image into the PDF
+      const pngImage = await pdfDoc.embedPng(imgData);
 
-      const pdfWidth = pdf.internal.pageSize.getWidth();
-      const pdfHeight = pdf.internal.pageSize.getHeight();
-      const imgWidth = canvas.width;
-      const imgHeight = canvas.height;
-      const ratio = Math.min(pdfWidth / imgWidth, pdfHeight / imgHeight);
-      const imgX = (pdfWidth - imgWidth * ratio) / 2;
-      const imgY = 30; // top margin
+      // Get image dimensions
+      const imgWidth = pngImage.width;
+      const imgHeight = pngImage.height;
 
-      pdf.addImage(
-        imgData,
-        "PNG",
-        imgX,
-        imgY,
-        imgWidth * ratio,
-        imgHeight * ratio
+      // Calculate scaling to fit the image on the page while maintaining aspect ratio
+      const ratio = Math.min(
+        page.getWidth() / imgWidth,
+        page.getHeight() / imgHeight
       );
-      pdf.save("resume.pdf");
+      const scaledWidth = imgWidth * ratio;
+      const scaledHeight = imgHeight * ratio;
+
+      // Center the image on the page
+      const x = (page.getWidth() - scaledWidth) / 2;
+      const y = (page.getHeight() - scaledHeight) / 2;
+
+      page.drawImage(pngImage, {
+        x,
+        y,
+        width: scaledWidth,
+        height: scaledHeight,
+      });
+
+      // Serialize the PDF to bytes and create a download link
+      const pdfBytes = await pdfDoc.save();
+      const blob = new Blob([pdfBytes], { type: "application/pdf" });
+      const link = document.createElement("a");
+      link.href = URL.createObjectURL(blob);
+      link.download = "resume.pdf";
+      link.click();
     } catch (error) {
       console.error("Error generating PDF:", error);
       alert("There was an error generating your PDF. Please try again.");

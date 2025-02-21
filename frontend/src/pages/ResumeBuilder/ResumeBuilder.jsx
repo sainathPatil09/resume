@@ -23,8 +23,10 @@ const ResumeBuilder = () => {
     projects: [],
   });
 
+  // In ResumeBuilder.jsx, modify handleTemplateSelect
   const handleTemplateSelect = (template) => {
     setSelectedTemplate(template);
+    localStorage.setItem("selectedTemplate", template.type || "professional");
     setCurrentStep("edit");
   };
 

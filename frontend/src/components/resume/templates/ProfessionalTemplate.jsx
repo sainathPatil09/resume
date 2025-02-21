@@ -113,17 +113,20 @@ export default function ProfessionalTemplate({ data }) {
         </section>
       )}
 
-      {/* Skills */}
+      {/* Skills - Fixed section */}
       {skills && skills.length > 0 && (
         <section className="mb-6">
           <h2 className="text-lg font-bold border-b mb-2">Skills</h2>
           <div className="flex flex-wrap gap-2">
-            {skills.map((skill, index) => (
+            {skills.map((skillItem, index) => (
               <span
                 key={index}
                 className="bg-gray-100 px-2 py-1 text-xs rounded"
               >
-                {skill}
+                {typeof skillItem === "string"
+                  ? skillItem
+                  : skillItem.skill ||
+                    `${skillItem.skill} (${skillItem.proficiency})`}
               </span>
             ))}
           </div>
@@ -153,14 +156,24 @@ export default function ProfessionalTemplate({ data }) {
         </section>
       )}
 
-      {/* Achievements */}
+      {/* Achievements - Fixed section */}
       {achievements && achievements.length > 0 && (
         <section className="mb-6">
           <h2 className="text-lg font-bold border-b mb-2">Achievements</h2>
           <ul className="list-disc pl-5">
             {achievements.map((achievement, index) => (
               <li key={index} className="text-sm mb-1">
-                {achievement}
+                {typeof achievement === "string" ? (
+                  achievement
+                ) : (
+                  <div>
+                    <strong>{achievement.title}</strong>
+                    {achievement.date && <span> ({achievement.date})</span>}
+                    {achievement.description && (
+                      <p>{achievement.description}</p>
+                    )}
+                  </div>
+                )}
               </li>
             ))}
           </ul>
@@ -175,7 +188,9 @@ export default function ProfessionalTemplate({ data }) {
             <ul className="list-disc pl-5">
               {personalInfo.certifications.map((cert, index) => (
                 <li key={index} className="text-sm mb-1">
-                  {cert}
+                  {typeof cert === "string"
+                    ? cert
+                    : cert.name || cert.title || JSON.stringify(cert)}
                 </li>
               ))}
             </ul>
@@ -191,7 +206,9 @@ export default function ProfessionalTemplate({ data }) {
                 key={index}
                 className="bg-gray-100 px-2 py-1 text-xs rounded"
               >
-                {lang}
+                {typeof lang === "string"
+                  ? lang
+                  : lang.name || lang.language || JSON.stringify(lang)}
               </span>
             ))}
           </div>
