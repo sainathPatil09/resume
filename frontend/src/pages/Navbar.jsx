@@ -22,7 +22,7 @@ const Navbar = () => {
     {
       name: "Interview Prep",
       icon: <MessageSquare className="h-4 w-4 mr-2" />,
-      href: "/interview",
+      href: "/interviewDashboard",
     },
     {
       name: "Resume Builder",
