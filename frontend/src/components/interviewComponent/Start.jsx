@@ -45,6 +45,7 @@ const Start = () => {
         <div className="flex justify-end gap-3">
           {activeQuestionIndex != 0 && (
             <Button
+              className="bg-blue-600 hover:bg-blue-700"
               onClick={() => setActiveQuestionIndex(activeQuestionIndex - 1)}
             >
               Previous Question
@@ -52,6 +53,7 @@ const Start = () => {
           )}
           {activeQuestionIndex != mockInterviewQuestion?.length - 1 && (
             <Button
+            className="bg-blue-600 hover:bg-blue-700"
               onClick={() => setActiveQuestionIndex(activeQuestionIndex + 1)}
             >
               Next Question
@@ -60,7 +62,7 @@ const Start = () => {
           {activeQuestionIndex === mockInterviewQuestion?.length - 1 && (
             <Link to={`/interviewDashboard/interview/${id}/feedback`}>
             
-            <Button>End Interview</Button>
+            <Button className="bg-blue-600 hover:bg-blue-700">End Interview</Button>
             </Link>
           )}
         </div>

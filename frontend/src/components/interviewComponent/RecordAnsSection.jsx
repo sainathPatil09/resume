@@ -118,7 +118,7 @@ const RecordAnsSection = ({
           <Button
             disabled={loading}
             onClick={StartStopRecording}
-            className="mt-5"
+            className="mt-5 bg-slate-200 hover:border-blue-500 m-5 hover:bg-slate-200"
           >
             {isRecording ? (
               <h2 className="flex gap-2 items-center text-red-600">
@@ -126,7 +126,7 @@ const RecordAnsSection = ({
                 Stop
               </h2>
             ) : (
-              <h2 className="flex gap-2 items-center text-red-600">
+              <h2 className=" flex gap-2 items-center text-red-600">
                 <Mic />
                 Start Recording
               </h2>

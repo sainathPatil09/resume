@@ -47,7 +47,7 @@ const Interview = () => {
                 <>
                   <WebcamIcon className="w-full h-60 p-10 hover:shadow-lg border rounded-lg bg-slate-100" />
                   <Button
-                    className="hover:cursor-pointer"
+                    className="hover:cursor-pointer bg-blue-600 hover:bg-blue-700"
                     onClick={() => setWebCamEnabled(true)}
                   >
                     Enable webCam and MicroPhone
@@ -57,12 +57,12 @@ const Interview = () => {
             </div>
   
             <div className=" md:w-1/2 space-y-5 mt-5  ">
-              <div className="space-y-5  border bg-violet-300 rounded-lg p-4">
+              <div className="space-y-5  border bg-violet-400  rounded-lg p-4">
                 <h2>
                   {" "}
                   <span className="font-semibold text-lg">
                     {" "}
-                    Job Role / Position: <span className="font-bold"> {interviewData?.jobPosition}</span>
+                    Job Role / Position: <span className="font-bold "> {interviewData?.jobPosition}</span>
                   </span>{" "}
                 </h2>
                 <h2>
@@ -96,7 +96,7 @@ const Interview = () => {
   
           <div className="flex justify-end ">
             <Link to={`/interviewDashboard/interview/${id}/start`}>
-              <Button className="">Start Interview</Button>
+              <Button className="bg-blue-600 hover:bg-blue-700">Start Interview</Button>
             </Link>
           </div>
         </div>

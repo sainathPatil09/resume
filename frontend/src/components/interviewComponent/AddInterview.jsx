@@ -15,6 +15,7 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { LoaderCircle } from "lucide-react";
+import { Label } from "../ui/label";
 
 const AddInterview = () => {
   const [openDialog, setOpenDialog] = useState(false);
@@ -66,7 +67,7 @@ const AddInterview = () => {
     <div>
       <div
         onClick={() => setOpenDialog(true)}
-        className="p-10 bg-slate-200 flex justify-center items-center hover:scale-105 mt-2 hover:border duration-200 border-green-300 w-80 h-30 text-center rounded-xl hover:shadow-xl"
+        className="p-10 bg-slate-200 flex justify-center items-center hover:scale-105 mt-2 hover:border duration-200 border-green-300 w-80 h-40 text-center rounded-xl hover:shadow-xl"
       >
         <h2 className="text-lg font-bold">+ Add Interview</h2>
       </div>
@@ -82,13 +83,13 @@ const AddInterview = () => {
                 <h1 className="font-semibold text-2xl">
                   Tell us about job interview
                 </h1>
-                <h2 className="text-lg">
+                <h2 className="text">
                   Add more details about your position/role, Job description and
                   years of experience
                 </h2>
 
                 <div className="flex flex-col">
-                  <label>Job Role/Positon</label>
+                  <label className="font-medium">Job Role/Positon</label>
                   <Input
                     onChange={(e) => setJobPosition(e.target.value)}
                     placeholder="Ex: Full stack developer, Devops Engineer"
@@ -96,15 +97,16 @@ const AddInterview = () => {
                   />
                 </div>
                 <div className="flex flex-col">
-                  <label>Job description / Tech Stack (in short)</label>
+                  <label  className="font-medium">Job description / Tech Stack (in short)</label>
                   <Textarea
+                    className="h-26"
                     onChange={(e) => setJobDesc(e.target.value)}
                     placeholder="Ex: React, Angular, Node.js etc"
                     required
                   />
                 </div>
                 <div className="flex flex-col">
-                  <label>Years of exp</label>
+                  <label  className="font-medium">Years of Experience</label>
                   <Input
                     onChange={(e) => setJobExprience(e.target.value)}
                     type="number"
@@ -115,10 +117,10 @@ const AddInterview = () => {
                 </div>
               </div>
               <div className=" mt-5 flex justify-end gap-3">
-                <Button type="button" onClick={() => setOpenDialog(false)}>
+                <Button className="bg-blue-600 hover:bg-blue-700" type="button" onClick={() => setOpenDialog(false)}>
                   cancel
                 </Button>
-                <Button disabled={loading} type="submit">
+                <Button className="bg-blue-600 hover:bg-blue-700" disabled={loading} type="submit">
                   {loading ? (
                     <>
                       <LoaderCircle className="animate-spin" />
