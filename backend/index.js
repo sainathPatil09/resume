@@ -8,6 +8,7 @@ import { analyzeResume } from "./geminiHelp/resumeAnalyzer.js";
 import { chatSessionInterview } from "./geminiHelp/aiInterview.js";
 import { v4 as uuidv4 } from "uuid";
 import interviewDetailRouter from './routes/interviewDet.routes.js'
+import userRouter from './routes/users.routes.js'
 
 dotenv.config();
 
@@ -210,6 +211,7 @@ app.use("/getRatingFeedback", async (req, res) => {
 });
 
 app.use("/", interviewDetailRouter);
+app.use("/", userRouter);
 
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);

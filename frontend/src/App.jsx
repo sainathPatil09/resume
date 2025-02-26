@@ -24,6 +24,8 @@ import Interview from "./components/interviewComponent/Interview";
 import Start from "./components/interviewComponent/Start";
 import { Toaster } from "@/components/ui/sonner"
 import Feedback from "./components/interviewComponent/Feedback";
+import EditProfile from "./components/profile/EditProfile";
+import EditMentorProfile from "./components/profile/EditMentorProfile";
 
 function App() {
   return (
@@ -65,6 +67,11 @@ function App() {
             <Route path="/interviewDashboard/interview/:id"  element={<Interview />} />
             <Route path="/interviewDashboard/interview/:id/start"  element={<Start />} />
             <Route path="/interviewDashboard/interview/:id/feedback"  element={<Feedback />} />
+
+            {/* Profile */}
+            <Route path="/edit-profle"  element={<EditProfile />} />
+            <Route path="/be-mentor"  element={<EditMentorProfile />} />
+
 
           </Route>
         </Routes>

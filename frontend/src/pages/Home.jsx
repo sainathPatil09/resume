@@ -11,6 +11,7 @@ import {
   Users,
   MessageSquare,
 } from "lucide-react";
+import Profile from "@/components/profile/Profile";
 
 const Home = () => {
   return (
@@ -38,9 +39,10 @@ const Home = () => {
                 >
                   Get Started <ArrowRight className="ml-2 h-4 w-4" />
                 </Button>
-                <Button size="lg" variant="outline" className="hover:shadow-md">
+                {/* <Button size="lg" variant="outline" className="hover:shadow-md">
                   Watch Demo
-                </Button>
+                </Button> */}
+                <Profile/>
               </div>
 
               <div className="pt-4">
